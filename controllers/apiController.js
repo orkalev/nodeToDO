@@ -8,7 +8,7 @@ module.exports = function(app){
 
     //The endpoint will get the user name and find at the DB all the todo list for the user
     app.get('/api/todos/:username', function(req, res) {
-        console.log(`[/api/todos/:username] - the uname is: ${req.params.username}`);
+        console.log(`[Get todo by username] - the uname is: ${req.params.username}`);
         Todos.find({ username: req.params.username },
             function(err, todos) {
                 if (err) throw err;
@@ -19,7 +19,7 @@ module.exports = function(app){
 
     //The endpoint will get a todo uniqe id and find the todo at the DB
     app.get('/api/todo/:id', function(req, res){
-        console.log(`[/api/todo/:id] - the id is: ${req.params.id}`);
+        console.log(`[Get todo by id] - the id is: ${req.params.id}`);
         Todos.findById({ _id: req.params.id },
              function(err, todos) {
                  if (err) throw err;
@@ -33,6 +33,7 @@ module.exports = function(app){
     //Else we will create a new todo at the data base. 
     app.post('/api/todo', function(req, res){
         if(req.body.id){
+            console.log(`[upadte todo] - the id is: ${req.body.id}`);
             Todos.findByIdAndUpdate(req.body.id, { 
                 todo: req.body.todo,
                 isDone: req.body.isDone,
@@ -43,9 +44,10 @@ module.exports = function(app){
                 res.send(`Success - todo id: ${req.body.id} is updated`);
             });
         }else{
+            console.log(`[Create new todo]`);
             var newTodo = Todos({
                 username: 'test',
-                todo: req.bost.todo,
+                todo: req.body.todo,
                 isDone: req.body.isDone,
                 hasAttachment: req.body.hasAttachment
             });
